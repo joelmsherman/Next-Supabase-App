@@ -111,6 +111,7 @@ This approach is **recommended for simpler products** with few sections and stra
 4. Answer Claude's clarifying questions and review its final plan
 5. Give Claude the go-ahead to implement - go get a coffee!
 6. Review and test - `npm run dev`
+7. [Deploy](#deployment)
 
 ### Incremental
 
@@ -122,7 +123,8 @@ This approach is **recommended for larger or more complicated products** when yo
 4. Answer Claude's clarifying questions and review its final plan
 5. Give Claude the go-ahead to implement
 6. Review and test `npm run dev`
-7. Move to the next section and repeat these steps until all sections are completed
+7. [Deploy](#deployment).
+8. Move to the next section and repeat steps 1-7 until all sections are built
 
 ## Deployment
 
@@ -165,6 +167,9 @@ The Supabase MCP installed in step 3 lets Claude configure this directly.
 ├── lib/
 │   ├── supabase/        # browser + server Supabase clients
 │   └── utils.ts
+├── product-plan/
+│   ├── prompts/        # contains one-shot or section prompt for Claude
+│   ├── ...             # in addition to many other folders related to your product plan and design
 ├── proxy.ts             # Supabase auth cookie proxy
 ├── components.json      # shadcn/ui config
 ├── tailwind.config.ts
