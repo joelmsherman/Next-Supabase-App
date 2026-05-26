@@ -90,14 +90,14 @@ Home page should display "Can't wait to see what you build"
 ### Step 1 - Setup Design System
 In Claude Code, invoke the design-system skill. Claude asks three quick picks — brand color, display font, body font (curated options with an "Other" fallback for custom hex / Google Fonts) — then scaffolds the full design system, including a live reference page at `/admin/design-system` that future agents are instructed to defer to.
 ```
-/bm-design-system
+/design-system
 ```
 
 ### Step 2 - Create PRD
 In Claude Code, invoke the prd-creator skill, and pass along any other context about the product you might have. Claude interviews you about the product, then writes a complete PRD pplus a sequence of milestone prompt files you hand to Claude in the next step.
 
 ```
-/bm-prd-creator
+/prd-creator
 ```
 
 ### Step 3 - Implement each Milestone
