@@ -1,0 +1,19 @@
+{
+  "label": "Violet",
+  "base": "#7c3aed",
+  "note": "Derived per the hex-mix algorithm in derive-palette.md. Light accent is violet-600, dark accent is violet-400; accent-display is violet-700 / violet-300.",
+  "tokens": {
+    "accent": {
+      "light": "#7c3aed",
+      "dark": "#a78bfa"
+    },
+    "accent-faded": {
+      "light": "#efe7fd",
+      "dark": "#180f3e"
+    },
+    "accent-display": {
+      "light": "#6d28d9",
+      "dark": "#c4b5fd"
+    }
+  }
+}

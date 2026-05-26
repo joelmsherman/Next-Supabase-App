@@ -1,0 +1,19 @@
+{
+  "label": "Indigo",
+  "base": "#4f46e5",
+  "note": "Derived per the hex-mix algorithm in derive-palette.md. accent-display picks one Tailwind step darker on light, and one step lighter on dark (indigo-700 / indigo-300). Dark accent uses indigo-400 for the lift Tailwind pairings commonly use.",
+  "tokens": {
+    "accent": {
+      "light": "#4f46e5",
+      "dark": "#818cf8"
+    },
+    "accent-faded": {
+      "light": "#eae9fc",
+      "dark": "#10123c"
+    },
+    "accent-display": {
+      "light": "#4338ca",
+      "dark": "#a5b4fc"
+    }
+  }
+}

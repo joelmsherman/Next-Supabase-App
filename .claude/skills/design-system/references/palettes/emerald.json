@@ -1,0 +1,19 @@
+{
+  "label": "Emerald",
+  "base": "#059669",
+  "note": "Derived per the hex-mix algorithm in derive-palette.md. Light accent is emerald-600, dark accent is emerald-400; accent-display is emerald-700 / emerald-300.",
+  "tokens": {
+    "accent": {
+      "light": "#059669",
+      "dark": "#34d399"
+    },
+    "accent-faded": {
+      "light": "#e1f2ed",
+      "dark": "#032026"
+    },
+    "accent-display": {
+      "light": "#047857",
+      "dark": "#6ee7b7"
+    }
+  }
+}

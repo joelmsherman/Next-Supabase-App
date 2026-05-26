@@ -1,0 +1,19 @@
+{
+  "label": "Cyan",
+  "base": "#0891b2",
+  "note": "Values are oklch() rather than hex to match the original locked-Cyan templates byte-for-byte — re-running the skill on an existing Cyan project produces zero diff.",
+  "tokens": {
+    "accent": {
+      "light": "oklch(71.5% 0.143 215.221)",
+      "dark": "oklch(78.9% 0.154 211.53)"
+    },
+    "accent-faded": {
+      "light": "oklch(96% 0.025 215.221)",
+      "dark": "oklch(22% 0.045 211.53)"
+    },
+    "accent-display": {
+      "light": "oklch(62% 0.135 215.221)",
+      "dark": "oklch(86% 0.135 211.53)"
+    }
+  }
+}

@@ -1,12 +1,12 @@
-# Next.js / Supabase Starter App Template
+# Next.js / Supabase Starter
 
 ## Introduction
 
-A Next.js + Supabase starter template optimized for **agent-first development**. It bundles the [Supabase Next.js quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs) with the Supabase and Vercel MCP servers, the Vercel CLI, and Claude Code skills so an agent can be productive in this codebase immediately after clone.
+A template for greenfield Next.js + Supabase products, pre-wired for **agent-first development**.
 
-## Requirements
+## Prerequisites
 
-### Node.js v18+
+### 1. Node.js v18+
 npm is included with Node.js — no separate install needed.
 
 - **Check your installed version:**
@@ -24,107 +24,84 @@ nvm use 18
 
 - **Windows:** Download the installer from [nodejs.org](https://nodejs.org/)
 
-### Supabase Project
+### 2. Supabase Project
 A Supabase account, organization and project is required.
 
-- If you don't have one already, create a free [Supabase account](https://supabase.com/dashboard/signup)
-- Create a new project via the [Supabase dashboard](https://database.new).
-- Note: Supabase allows 2 free projects (across any of your organizations) at a time ONLY
+- [Signup](https://supabase.com/dashboard/signup).
+- Create a [new project](https://database.new).
 
-### Vercel Account
+### 3. Vercel Account
 A Vercel account and the Vercel CLI is required.
 
-- If you don't have one, create a [Vercel account](https://vercel.com/signup). 
-- Sign in with the **same GitHub account** that will host your repo; Vercel uses auto CI/CD!
+- [Signup](https://vercel.com/signup). Use the **same GitHub account** that will host your repo so auto CI works
 - Install the Vercel CLI globally and authenticate
-
 ```bash
 npm install -g vercel
 vercel login
 ```
 
-## Getting Started
+## Setup
 
 1. Clone this template to a local repository `repo-name` of your choice:
-
 ```bash
 git clone https://github.com/joelmsherman/Next-Supabase-App.git /path/to/your/<repo-name>
 cd /path/to/your/<repo-name>
 ```
 
 2. Install dependencies:
-
 ```bash
 npm install
 ```
 
 3. Disconnect from the template's remote and create an empty one on GitHub (no README/license/.gitignore)
-
 ```bash
 git remote remove origin
 ```
 
 4. Point your local at your new GitHub remote and push
-
 ```bash
 git remote add origin https://github.com/<your-user>/<your-repo>.git
 git branch -M main
 git push -u origin main
 ```
 
-5. Configure environment variables
-- Navigate to your Supabase project and click the **Connect** button in the header
-- Under the **Framework** tab, select `Framework` = Next.js and `Variant` = App Router
-- Under Add files, copy the contents of the `.env.local` window
-- Paste the contents into `.env.example`
-- Rename `.env.example` to `.env.local`
+5. Configure Supabase
+In your Supabase project dashboard, click **Connect** --> **Framework**, set `Framework` = Next.js, `Variant` = App Router; copy the env-var block, paste it over `.env.example` and rename to `.env.local`.
 
-6. Configure Supabase Skills and MCP Server acces
-- While in your Supabase project's **Connect** settings,
-- Under the **MCP** tab, select `Client` = Claude Code and `Feature groups` = {select all}
-- Click **Copy prompt**
-- Start Claude Code and deliver the prompt to Claude
-- Claude will: 
-   - add the Supabase MCP server to the project so claude can directly control your Project (note: the Supabase MCP is nearly equivalent to a CLI tool if you configure it with all feature groups)
-   - install Agent Skills for claude to become a Supabase expert
+6. Configure Supabase Skills and MCP Server access
+In your Supabase project, click **Connect** --> **MCP**, set `Client` = Claude Code, select all feature groups, click **Copy Prompt**, and deliver it to Claude Code. Claude will install Supabase Agent Skills and register the project-scoped MCP Server.
 
 7. Configure Vercel Skills and MCP Server access
-- Install the Vercel deployment skill in your terminal: `npx skills add https://github.com/vercel-labs/agent-skills --skill deploy-to-vercel`. Scope it to the project.
-- Register the Vercel MCP server in your terminal: `claude mcp add --transport http vercel https://mcp.vercel.com`. On first use, Claude will prompt an OAuth flow in the browser to authorize access to your Vercel account and teams.
+```bash
+`npx skills add https://github.com/vercel-labs/agent-skills --skill deploy-to-vercel`
+```
+```bash
+mcp add --transport http vercel https://mcp.vercel.com`
+```
+
+8. Verify
+```bash
+npm run dev
+```
+Home page should display "Can't wait to see what you build"
 
 ## Workflow
 
-This workflow assumes that you have planned and designed your product using [DesignOS](https://buildermethods.com/design-os) and have a separate repository for those artifacts. See [**this repo first**](https://github.com/joelmsherman/Product-Planning-Design) if you haven't yet planned and designed your product. Do it now! We're spec-driven AI developers, not vibe-coders.
+### Step 1 - Setup Design System
+In Claude Code, invoke the design-system skill. Claude asks three quick picks — brand color, display font, body font (curated options with an "Other" fallback for custom hex / Google Fonts) — then scaffolds the full design system, including a live reference page at `/admin/design-system` that future agents are instructed to defer to.
+```
+/bm-design-system
+```
 
-1. Copy the `product-plan/` folder from your planning and design repo into the root of this codebase
-2. Start Claude Code
-3. Choose a workflow approach: [one-shot](#one-shot) vs. [incremental](#incremental) 
-4. Ship it with the [Deployment](#deployment) prompts
+### Step 2 - Create PRD
+In Claude Code, invoke the prd-creator skill, and pass along any other context about the product you might have. Claude interviews you about the product, then writes a complete PRD pplus a sequence of milestone prompt files you hand to Claude in the next step.
 
-### One-Shot
+```
+/bm-prd-creator
+```
 
-This approach is **recommended for simpler products** with few sections and straightforward features. It's great when you need a quick prototype, or when you have time contraints and need something built fast.
-
-1. Open `product-plan/prompts/one-shot-prompt.md`
-2. Add any additional notes in the prompt, such as your tech stack preferences or any product-specific requirements/constraints
-3. Deliver the prompt to Claude **in Plan mode** (shift+tab at the prompt until you see 'Plan mode')
-4. Answer Claude's clarifying questions and review its final plan
-5. Give Claude the go-ahead to implement - go get a coffee!
-6. Review and test - `npm run dev`
-7. [Deploy](#deployment)
-
-### Incremental
-
-This approach is **recommended for larger or more complicated products** when you want to build the product and review Claude's progress section by section. You start with the product foundation (design tokens, data shape/types, routing, etc.) then move on to the shell and navigation, and then implement each section one by one.
-
-1. Open `product-plan/prompts/section-prompt.md`
-2. Enter the SECTION_NAME, SECTION_ID and NN variables at the top
-3. Deliver the prompt to Claude **in Plan mode** (shift+tab at the prompt until you see 'Plan mode')
-4. Answer Claude's clarifying questions and review its final plan
-5. Give Claude the go-ahead to implement
-6. Review and test `npm run dev`
-7. [Deploy](#deployment).
-8. Move to the next section and repeat steps 1-7 until all sections are built
+### Step 3 - Implement each Milestone
+Hand each milestone prompt back to Claude **in Plan Mode**. Answer clarifying questions, review the plan, approve, test (`npm run dev`), then [deploy](#deployment). Move to the next milestone, rinse and repeat.
 
 ## Deployment
 

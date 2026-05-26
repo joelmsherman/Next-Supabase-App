@@ -1,0 +1,19 @@
+{
+  "label": "Rose",
+  "base": "#e11d48",
+  "note": "Derived per the hex-mix algorithm in derive-palette.md. Light accent is rose-600, dark accent is rose-400; accent-display is rose-700 / rose-300.",
+  "tokens": {
+    "accent": {
+      "light": "#e11d48",
+      "dark": "#fb7185"
+    },
+    "accent-faded": {
+      "light": "#fbe4e9",
+      "dark": "#2a0a20"
+    },
+    "accent-display": {
+      "light": "#be123c",
+      "dark": "#fda4af"
+    }
+  }
+}

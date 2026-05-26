@@ -1,0 +1,19 @@
+{
+  "label": "Slate (monochrome)",
+  "base": "#334155",
+  "note": "Monochrome pick — the accent uses the same neutral family as the surfaces/text. Light accent is slate-700, dark accent is slate-300; accent-display is slate-800 / slate-100.",
+  "tokens": {
+    "accent": {
+      "light": "#334155",
+      "dark": "#cbd5e1"
+    },
+    "accent-faded": {
+      "light": "#e7e8eb",
+      "dark": "#0b1122"
+    },
+    "accent-display": {
+      "light": "#1e293b",
+      "dark": "#f1f5f9"
+    }
+  }
+}
