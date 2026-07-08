@@ -6,20 +6,20 @@ A template for greenfield Next.js + Supabase products, pre-wired for **agent-fir
 
 ## Prerequisites
 
-### 1. Node.js v18+
-npm is included with Node.js — no separate install needed.
+### 1. Node.js v22+
+npm is included with Node.js — no separate install needed. Next.js 16 requires Node 20.9+, and the Supabase client libraries require Node **22 or higher**.
 
 - **Check your installed version:**
 ```bash
 node -v
 ```
-If you see `v18.x.x` or higher, you're good. If not, install or update Node.js:
+If you see `v22.x` or higher, you're good. If not, install or update Node.js:
 
 - **macOS/Linux (via nvm):**
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-nvm install 18
-nvm use 18
+nvm install 22
+nvm use 22
 ```
 
 - **Windows:** Download the installer from [nodejs.org](https://nodejs.org/)
@@ -144,24 +144,24 @@ The Supabase MCP installed in step 3 lets Claude configure this directly.
 
 ```
 ├── app/                 # Next.js App Router
-│   ├── auth/            # login / sign-up / forgot-password routes
-│   ├── protected/       # authenticated routes
+│   ├── globals.css      # Tailwind v4 CSS-first config + shadcn tokens
 │   ├── layout.tsx
 │   └── page.tsx
-├── components/          # React components
+├── components/
 │   ├── ui/              # shadcn/ui primitives
-│   ├── tutorial/        # onboarding walkthrough
-│   └── *-form.tsx       # auth forms, theme switcher, etc.
+│   └── theme-switcher.tsx
 ├── lib/
 │   ├── supabase/        # browser + server Supabase clients
 │   └── utils.ts
 ├── _build_plan/         # written by /prd-creator: PRDs (full + client), design brief/handoff,
 │   └── milestones/      #   and per-milestone prompts — temporary; delete after build-out
-├── proxy.ts             # Supabase auth cookie proxy
+├── proxy.ts             # Supabase auth session cookie proxy
 ├── components.json      # shadcn/ui config
-├── tailwind.config.ts
+├── postcss.config.mjs   # Tailwind v4 PostCSS plugin (no tailwind.config.ts)
 ├── next.config.ts
 ├── tsconfig.json
 ├── .env.example
 └── package.json
 ```
+
+The starter ships intentionally lean — **no auth screens or demo pages**. The auth approach (SSO / social login or email + password via Supabase Auth) is decided during the PRD interview, and the auth screens are specced and built like any other feature during milestones. The Supabase plumbing (browser/server clients, session cookie proxy) is already wired up and waiting.
