@@ -87,21 +87,32 @@ Home page should display "Can't wait to see what you build"
 
 ## Workflow
 
-### Step 1 - Setup Design System
-In Claude Code, invoke the design-system skill. Claude asks three quick picks — brand color, display font, body font (curated options with an "Other" fallback for custom hex / Google Fonts) — then scaffolds the full design system, including a live reference page at `/admin/design-system` that future agents are instructed to defer to.
-```
-/design-system
-```
+### Step 1 - Create PRD
+In Claude Code, invoke the prd-creator skill, and pass along any other context about the product you might have (intake meeting transcript, notes, etc.). Claude interviews you about the product, then writes everything to `_build_plan/`:
 
-### Step 2 - Create PRD
-In Claude Code, invoke the prd-creator skill, and pass along any other context about the product you might have. Claude interviews you about the product, then writes a complete PRD pplus a sequence of milestone prompt files you hand to Claude in the next step.
+- `prd.md` — the full PRD, consumed by you and the milestone coding agents
+- `prd.html` — the client-friendly PRD; open it in a browser and send it to the client for review
+- `design-brief.md` — a paste-ready brief for Claude Design (next step)
+- `design-handoff.md` — a stub where the approved mockset link goes after sign-off
+- `milestones/N-{slug}/prompt.md` — one build prompt per milestone
 
 ```
 /prd-creator
 ```
 
-### Step 3 - Implement each Milestone
-Hand each milestone prompt back to Claude **in Plan Mode**. Answer clarifying questions, review the plan, approve, test (`npm run dev`), then [deploy](#deployment). Move to the next milestone, rinse and repeat.
+### Step 2 - Design mocks
+Once the client approves the PRD, paste `_build_plan/design-brief.md` into [Claude Design](https://claude.ai/design) — along with the client's design system, if they have one there — and create high-fidelity interactive mocks. Iterate with the client until final approval.
+
+When approved, **paste the mockset's handoff/share URL into `_build_plan/design-handoff.md`**. The `/design-system` skill (step 3) and every milestone prompt (step 4) read it from there.
+
+### Step 3 - Setup Design System
+In Claude Code, invoke the design-system skill. Claude detects the approved mockset link in `_build_plan/design-handoff.md`, extracts the brand color and fonts from the mockset, confirms them with you, then scaffolds the full design system, including a live reference page at `/admin/design-system` that future agents are instructed to defer to. If there's no mockset, it falls back to three quick picks — brand color, display font, body font (curated options with an "Other" fallback for custom hex / Google Fonts).
+```
+/design-system
+```
+
+### Step 4 - Implement each Milestone
+Hand each milestone prompt back to Claude **in Plan Mode** — the prompt already points at the PRD and the approved mockset via `_build_plan/design-handoff.md`. Answer clarifying questions, review the plan, approve, test (`npm run dev`), then [deploy](#deployment). Move to the next milestone, rinse and repeat.
 
 ## Deployment
 
@@ -144,9 +155,8 @@ The Supabase MCP installed in step 3 lets Claude configure this directly.
 ├── lib/
 │   ├── supabase/        # browser + server Supabase clients
 │   └── utils.ts
-├── product-plan/
-│   ├── prompts/        # contains one-shot or section prompt for Claude
-│   ├── ...             # in addition to many other folders related to your product plan and design
+├── _build_plan/         # written by /prd-creator: PRDs (full + client), design brief/handoff,
+│   └── milestones/      #   and per-milestone prompts — temporary; delete after build-out
 ├── proxy.ts             # Supabase auth cookie proxy
 ├── components.json      # shadcn/ui config
 ├── tailwind.config.ts

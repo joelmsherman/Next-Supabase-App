@@ -1,6 +1,6 @@
 # PRD HTML template
 
-When the user picked **HTML** or **Both** in the format-choice phase, write `_build_plan/prd.html` using the scaffold and section snippets below. The file must be fully self-contained — only CDN-loaded dependencies (Tailwind, Google Fonts, Lucide), no other files, no build step.
+Write `_build_plan/prd.html` — the client-facing review copy of the PRD — using the scaffold and section snippets below. Same locked scope as `prd.md`, but omit builder-internal mechanics (the build-plan agent note, milestone-log instructions). The file must be fully self-contained — only CDN-loaded dependencies (Tailwind, Google Fonts, Lucide), no other files, no build step.
 
 ## File scaffold
 

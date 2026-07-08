@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: Guides you through creating and implementing a design system for your application.
+description: Codifies your approved design (a Claude Design mockset, or quick brand picks) into a central style file, reusable UI primitives, and a live reference page for your application.
 ---
 
 # Design System Builder
@@ -9,7 +9,7 @@ You are guiding a builder through scaffolding a complete design system into a Re
 
 ## Audience assumption
 
-The user wants a complete, opinionated design system scaffolded into their app with as few decisions as possible — and they likely don't have deep design chops. Ask only for the basics that *must* reflect their brand: brand color, display font, and body font. Everything else (neutral scale, semantic signal/danger colors, spacing, type ramp) ships locked. Whenever a technical concept appears, briefly explain it in plain language before asking.
+The user wants a complete, opinionated design system scaffolded into their app with as few decisions as possible. In the usual workflow the design decisions were **already made and client-approved** in a Claude Design mockset — your job is extraction and codification, not design: pull brand color and fonts from the mockset, confirm them, and scaffold. Only when no mockset exists do you fall back to asking for the basics that *must* reflect their brand: brand color, display font, and body font. Everything else (neutral scale, semantic signal/danger colors, spacing, type ramp) ships locked. Whenever a technical concept appears, briefly explain it in plain language before asking.
 
 ## Core interaction principles
 
@@ -61,8 +61,14 @@ If any of those are true → **re-run mode**. Otherwise → **first-run mode**.
 - Check for `CLAUDE.md` at repo root.
 - Note which exists (or neither).
 
+**Design handoff detection:**
+
+- Check for `_build_plan/design-handoff.md` at the repo root (written by the `/prd-creator` skill).
+- If it exists, read it and note whether the "Mockset link" section contains an actual URL (not `TBD` / a placeholder comment).
+- This decides the entry into Phase 2: URL present → propose mockset-ingestion mode; file missing or still `TBD` → you'll ask (see Phase 2-pre).
+
 State a brief summary of what you found before moving on. Example:
-> Detected: Vite + React + Tailwind v4. No existing design system. `CLAUDE.md` present, `AGENTS.md` absent. I'll scaffold from scratch.
+> Detected: Vite + React + Tailwind v4. No existing design system. `CLAUDE.md` present, `AGENTS.md` absent. Approved mockset link found in `_build_plan/design-handoff.md`. I'll scaffold from scratch, extracting branding from the mockset.
 
 ## Phase 1 — Confirm route
 
@@ -79,7 +85,38 @@ Save the chosen route as `routePath` for downstream phases.
 
 ## Phase 2 — Branding
 
-Ask the user for three basics — brand color, display font, body font. Everything else is locked.
+Resolve three basics — brand (accent) color, display font, body font. Everything else is locked. There are two ways to get them: **Mode A** extracts them from an approved Claude Design mockset (preferred — the client already signed off on those decisions); **Mode B** asks the user directly (fallback when no mockset exists).
+
+### 2-pre. Design source
+
+Decide the mode:
+
+- **Handoff URL detected in Phase 0** → propose Mode A. Use AskUserQuestion:
+  - Question: "I found the approved mockset link in `_build_plan/design-handoff.md`. How should I get the branding?"
+  - Options: `Extract from the approved mockset (recommended)`, `Pick manually instead`
+- **Handoff file missing, or link still TBD** → ask in chat whether an approved Claude Design mockset (or exported mock HTML) exists. If the user provides a link or files, use Mode A with it; otherwise fall through to Mode B.
+
+### Mode A — Extract from the approved mockset
+
+The mockset is the client-approved source of truth; extract the branding rather than re-deciding it.
+
+1. **Fetch the mockset.** Use WebFetch on the handoff URL (and the per-page screens it links to, if needed). If the URL can't be fetched (auth wall, unreachable), ask the user to either paste the mock's exported HTML/CSS or just tell you the three values — don't guess.
+2. **Extract:**
+   - The **brand accent color** as a 6-digit hex — the color used for primary buttons, links, and highlights in the mocks. If several candidates appear, list them with where each is used and ask the user to pick.
+   - The **display font** family (headings) and **body font** family.
+3. **Map onto the standard machinery:**
+   - Treat the accent hex exactly like a custom hex from Mode B 2a: compute the six accent token values via `references/derive-palette.md`.
+   - Treat the fonts exactly like custom font picks from Mode B 2b/2c: resolve stacks and Google Fonts URLs per 2d. If a font isn't available on Google Fonts, say so and ask for a substitute family or a self-hosted stylesheet URL.
+4. **Check the neutrals.** The non-accent placeholders (page, surface, hairline, ink) ship locked to the values in 2d. If the mockset clearly deviates — e.g. a dark-only design, tinted surfaces, an unusual page background — surface that in chat and ask whether to override the affected `__COLOR_PAGE_*__` / `__COLOR_SURFACE_*__` / `__COLOR_HAIRLINE_*__` / `__COLOR_INK_*__` values with ones extracted from the mock. Default to the locked values when the mock is a conventional light design.
+5. **Confirm before scaffolding.** State the extraction in one line so the user can correct it:
+
+> Extracted from the mockset — **\<headline-font\>** for headings, **\<body-font\>** for body, **\<hex\>** as the brand accent. Scaffolding now.
+
+Then skip Mode B and go straight to **2d** to resolve the substitution values.
+
+### Mode B — Interview (no mockset)
+
+Ask the user for three basics — brand color, display font, body font.
 
 Before the first question, briefly explain in one or two sentences what's about to happen:
 
@@ -138,7 +175,7 @@ If the user picks Other, ask them for a Google Fonts family name. If they pick "
 
 ### 2d. Resolve substitution values
 
-After 2a–2c, compute these strings for Phase 4 substitution:
+After Mode A extraction (or the Mode B picks in 2a–2c), compute these strings for Phase 4 substitution:
 
 - `__HEADLINE_FONT__` = the picked display family name (e.g. `Inter`).
 - `__BODY_FONT__` = the picked body family name (e.g. `DM Sans`).
@@ -177,9 +214,11 @@ After 2a–2c, compute these strings for Phase 4 substitution:
 | `__COLOR_DANGER_DISPLAY_LIGHT__`     | `oklch(55% 0.20 25)`           |
 | `__COLOR_DANGER_DISPLAY_DARK__`      | `oklch(82% 0.18 22)`           |
 
-State a one-line confirmation back to the user so they can re-prompt if they don't like a pick:
+State a one-line confirmation back to the user so they can re-prompt if they don't like a pick (in Mode A you already did this at the end of extraction — don't repeat it):
 
 > Got it — **\<headline-font\>** for headings, **\<body-font\>** for body, **\<color-label\>** as the brand color. Scaffolding now.
+
+One exception to the locked table: if the user approved neutral overrides in Mode A step 4, use those extracted values for the affected placeholders instead.
 
 ## Phase 3 — (re-run only) Scope
 
@@ -196,7 +235,7 @@ If "Full re-scaffold", confirm with a second AskUserQuestion: `Yes, overwrite`, 
 
 ## Phase 4 — Write files
 
-This is the "do the work" phase. Don't show drafts; just write the files. The user has already confirmed the route and picked brand color + fonts in Phase 2.
+This is the "do the work" phase. Don't show drafts; just write the files. The user has already confirmed the route and the branding (extracted from the mockset or picked manually) in Phase 2.
 
 ### 4a. Resolve target paths
 

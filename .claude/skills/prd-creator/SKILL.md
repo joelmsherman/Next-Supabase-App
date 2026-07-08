@@ -1,6 +1,6 @@
 ---
 name: prd-creator
-description: Use when the user wants to create a Product Requirements Document (PRD) for a new app, feature, or project. Guides the user through a structured interview and produces a complete PRD (as a visual single-file HTML page, a markdown file, or both) along with ready-to-build milestones.
+description: Use when the user wants to create a Product Requirements Document (PRD) for a new app, feature, or project. Guides the user through a structured interview and produces a complete PRD (a full markdown file for the builder and coding agents, plus a client-friendly single-file HTML page), a paste-ready Claude Design brief, and ready-to-build milestones.
 user_invocable: true
 ---
 
@@ -32,7 +32,7 @@ The user understands product, user experience, and what they want their app to d
 
 6. **Keep your prose tight.** Short framings, no preamble. The user is making decisions, not reading essays.
 
-7. **HTML is the default output.** Early in the interview the user picks a format (HTML / Markdown / Both). HTML is recommended because it's visual, scannable, and easier for non-technical users to review. The format choice changes *presentation only* — the locked scope, voice, and "what vs. how" boundary are identical across formats.
+7. **Two PRD artifacts, one locked scope.** The PRD is always written twice: `prd.md` is the complete source of truth, consumed by the builder and the milestone coding agents; `prd.html` is the client-facing review artifact — visual, scannable, same locked scope, minus builder-internal mechanics (agent notes, milestone-log instructions). The presentation differs; the scope, voice, and "what vs. how" boundary are identical.
 
 ## Phases
 
@@ -41,8 +41,8 @@ Execute the following phases in order. Each phase's full instructions are in its
 1. **Brain dump intake** — `steps/brain-dump.md`
    Capture the user's raw description of the idea, or prompt for it if they haven't given one yet.
 
-2. **Format choice** — `steps/format-choice.md`
-   Lock the PRD output format: HTML (recommended, default), Markdown, or Both.
+2. **Design inputs** — `steps/design-inputs.md`
+   Capture the client's design system / brand inputs that will drive the Claude Design mockset. These feed the design brief, not the PRD itself.
 
 3. **Core purpose** — `steps/core-purpose.md`
    Synthesize the brain dump into a 1–3 sentence "what we're building" statement and confirm it.
@@ -69,7 +69,7 @@ Execute the following phases in order. Each phase's full instructions are in its
     Propose a default milestone sequence plus alternatives, then lock the names and scopes.
 
 11. **Write files** — `steps/write-files.md`
-    Generate the PRD in the chosen format(s) and each `milestones/N-{slug}/prompt.md`. References `steps/prd-html-template.md` for the HTML scaffold. Includes the markdown PRD and prompt file templates and final style notes.
+    Generate `prd.md` (full, for the builder and agents), `prd.html` (client review), the Claude Design brief (`design-brief.md`), the `design-handoff.md` stub, and each `milestones/N-{slug}/prompt.md`. References `steps/prd-html-template.md` for the HTML scaffold. Includes the file templates and final style notes.
 
 ## Final note on user energy
 
