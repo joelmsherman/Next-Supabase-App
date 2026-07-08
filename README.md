@@ -44,7 +44,7 @@ vercel login
 
 1. Clone this template to a local repository `repo-name` of your choice:
 ```bash
-git clone https://github.com/joelmsherman/Next-Supabase-App.git /path/to/your/<repo-name>
+git clone https://github.com/joelmsherman/next-supabase-app.git /path/to/your/<repo-name>
 cd /path/to/your/<repo-name>
 ```
 
